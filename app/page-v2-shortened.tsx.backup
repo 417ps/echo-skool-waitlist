@@ -1,0 +1,692 @@
+"use client"
+
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
+import { QuizButton } from "@/components/quiz/QuizButton"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Input } from "@/components/ui/input"
+import { Slider } from "@/components/ui/slider"
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import { Users, Clock, TrendingUp, DollarSign, MessageCircle, ArrowRight, CheckCircle, Star, Zap, Target, Brain, Sparkles, Trophy, Handshake, AlertTriangle, HelpCircle, Award, BarChart3 } from "lucide-react"
+import { ThemeToggle } from "@/components/theme-toggle"
+import { EchoSkoolLogo } from "@/components/echo-skool-logo"
+import CountUp from "@/components/effects/CountUp"
+import Aurora from "@/components/effects/Aurora"
+import SpotlightCard from "@/components/effects/SpotlightCard"
+import ScrollReveal from "@/components/effects/ScrollReveal"
+import ProblemList from "@/components/effects/ProblemList"
+import { MonetizationCarousel } from "@/components/monetization-carousel"
+import ScenarioShowcase from "@/components/ScenarioShowcase"
+
+export default function WaitlistPage() {
+  const [communitySize, setCommunitySize] = useState(500)
+  const [membershipPrice, setMembershipPrice] = useState(97)
+  const [currentChurn, setCurrentChurn] = useState(20)
+  const [hoursPerWeek, setHoursPerWeek] = useState(15)
+  const [updateKey, setUpdateKey] = useState(0)
+
+  // Current situation calculations
+  const currentMonthlyRevenue = communitySize * membershipPrice * (1 - currentChurn / 100)
+  const currentHourlyValue = currentMonthlyRevenue / (hoursPerWeek * 4.33)
+  
+  // AI improvements (realistic estimates based on research)
+  const churnReduction = 0.3 // 30% churn reduction (from 20% to 14%)
+  const timeReduction = 0.5 // 50% time savings
+  const newChurn = currentChurn * (1 - churnReduction)
+  const timeSaved = hoursPerWeek * timeReduction
+  
+  // Post-AI calculations
+  const newMonthlyRevenue = communitySize * membershipPrice * (1 - newChurn / 100)
+  const retentionIncrease = newMonthlyRevenue - currentMonthlyRevenue
+  const timeSavingsValue = timeSaved * 4.33 * currentHourlyValue
+  const totalROI = retentionIncrease + timeSavingsValue // total monthly benefit
+
+  // Logarithmic scale conversion functions
+  const logScale = (value: number, min: number, max: number) => {
+    const minLog = Math.log(min)
+    const maxLog = Math.log(max)
+    const scale = (maxLog - minLog) / 100
+    return Math.round(Math.exp(minLog + scale * value))
+  }
+
+  const inverseLogScale = (value: number, min: number, max: number) => {
+    const minLog = Math.log(min)
+    const maxLog = Math.log(max)
+    const scale = (maxLog - minLog) / 100
+    return Math.round((Math.log(value) - minLog) / scale)
+  }
+
+  // Function to update values and trigger CountUp reset
+  const handleInputChange = (setter: (value: number) => void, value: number) => {
+    setter(value)
+    setUpdateKey(prev => prev + 1) // Force CountUp components to reset
+  }
+
+  // Direct input handlers
+  const handleDirectInput = (setter: (value: number) => void, value: string, min: number, max: number) => {
+    const numValue = parseInt(value) || 0
+    const clampedValue = Math.max(min, Math.min(max, numValue))
+    handleInputChange(setter, clampedValue)
+  }
+
+  return (
+    <main className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-background dark:via-background dark:to-background">
+      {/* Navigation */}
+      <nav className="sticky top-0 z-50 backdrop-blur-lg bg-background/80 border-b border-border">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <div className="flex items-center">
+              <EchoSkoolLogo size="sm" />
+            </div>
+            <div className="flex items-center gap-2">
+              <ThemeToggle />
+              <QuizButton className="bg-skool-red/10 hover:bg-skool-red/20 text-skool-red border-2 border-skool-red/30" size="lg">
+                Take the Quiz
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </QuizButton>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      {/* 1. Hero Section */}
+      <section className="relative px-4 py-20 max-w-7xl mx-auto overflow-hidden">
+        {/* Aurora Background */}
+        <Aurora 
+          className="absolute inset-0" 
+          colors={['rgba(232, 84, 73, 0.08)', 'rgba(245, 184, 0, 0.08)', 'rgba(79, 195, 247, 0.05)']}
+          size="xl"
+          speed="slow"
+        />
+        
+        <div className="relative z-10 text-center mb-16">
+          <Badge className="mb-6 bg-skool-red/20 text-skool-red border-skool-red/30">
+            <Users className="w-3 h-3 mr-1" />
+            Only 3 Pilot Spots Available • Collaborative Development
+          </Badge>
+          
+          <h1 className="text-6xl lg:text-7xl font-bold leading-tight mb-8">
+            Stop Losing $10,000+/Month to
+            <span className="text-skool-red"> Poor Member Support</span>
+          </h1>
+          
+          <p className="text-2xl text-muted-foreground mb-12 max-w-4xl mx-auto">
+            Your AI co-pilot answers member questions instantly, increases retention by 30%, 
+            <span className="font-semibold">and saves you 15+ hours per week</span> - Collaborative setup in 7-10 days.
+          </p>
+          
+          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+            <QuizButton className="bg-skool-red/10 hover:bg-skool-red/20 text-skool-red border-2 border-skool-red/30 font-semibold text-xl px-10 py-6" size="lg">
+              <MessageCircle className="mr-3 h-6 w-6" />
+              Qualify for Pilot Program
+            </QuizButton>
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center text-muted-foreground text-lg">
+                <Clock className="w-5 h-5 mr-2" />
+                $1,997 pilot pricing • Save $3,000
+              </div>
+              <Badge className="bg-yellow-500/20 text-yellow-600 border-yellow-500/30">
+                Collaborative Setup & Testing (7-10 Days)
+              </Badge>
+            </div>
+          </div>
+        </div>
+
+        {/* Pilot Benefits Bar */}
+        <div className="bg-background/80 backdrop-blur-lg border border-border rounded-2xl p-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            <div>
+              <div className="text-4xl font-bold text-skool-red mb-2">$1,997</div>
+              <div className="text-sm text-muted-foreground">Pilot Pricing<br/>(Save $3,000)</div>
+            </div>
+            <div>
+              <div className="flex justify-center mb-2">
+                <Handshake className="w-10 h-10 text-skool-cyan" />
+              </div>
+              <div className="text-sm text-muted-foreground">Direct Input<br/>on Development</div>
+            </div>
+            <div>
+              <div className="flex justify-center mb-2">
+                <Zap className="w-10 h-10 text-skool-yellow" />
+              </div>
+              <div className="text-sm text-muted-foreground">Priority Features<br/>& Support</div>
+            </div>
+            <div>
+              <div className="flex justify-center mb-2">
+                <Star className="w-10 h-10 text-skool-salmon" />
+              </div>
+              <div className="text-sm text-muted-foreground">Founder Benefits<br/>for Life</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* NEW: Pilot Program Urgency Section */}
+      <section className="px-4 py-12 bg-skool-red/5 border-y-2 border-skool-red/20">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center space-y-6">
+            <h2 className="text-3xl font-bold">
+              Pilot Program Status: <span className="text-skool-red">Closing Soon</span>
+            </h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+              {/* Spot 1 */}
+              <Card className="border-2 border-skool-red/30 bg-background/50">
+                <CardContent className="p-6 text-center">
+                  <div className="w-16 h-16 bg-skool-red rounded-full flex items-center justify-center text-white font-bold text-2xl mx-auto mb-3">
+                    1
+                  </div>
+                  <Badge className="bg-skool-red text-white">TAKEN</Badge>
+                  <p className="text-sm text-muted-foreground mt-2">Fitness Community</p>
+                  <p className="text-xs text-muted-foreground">2,100 members</p>
+                </CardContent>
+              </Card>
+
+              {/* Spot 2 */}
+              <Card className="border-2 border-yellow-500/30 bg-background/50">
+                <CardContent className="p-6 text-center">
+                  <div className="w-16 h-16 bg-yellow-500 rounded-full flex items-center justify-center text-white font-bold text-2xl mx-auto mb-3 animate-pulse">
+                    2
+                  </div>
+                  <Badge className="bg-yellow-500 text-white">IN REVIEW</Badge>
+                  <p className="text-sm text-muted-foreground mt-2">Business Coaching</p>
+                  <p className="text-xs text-muted-foreground">890 members</p>
+                </CardContent>
+              </Card>
+
+              {/* Spot 3 */}
+              <Card className="border-2 border-skool-cyan/30 bg-background/50 relative">
+                <div className="absolute inset-0 bg-gradient-to-r from-skool-cyan/10 to-skool-yellow/10 animate-pulse rounded-lg"></div>
+                <CardContent className="p-6 text-center relative z-10">
+                  <div className="w-16 h-16 bg-skool-cyan rounded-full flex items-center justify-center text-white font-bold text-2xl mx-auto mb-3">
+                    3
+                  </div>
+                  <Badge className="bg-skool-cyan text-white">LAST SPOT</Badge>
+                  <p className="text-sm font-bold mt-2">Your Community?</p>
+                  <p className="text-xs text-muted-foreground">Apply now</p>
+                </CardContent>
+              </Card>
+            </div>
+
+            <div className="bg-skool-red/10 border-2 border-skool-red/30 rounded-lg p-6 max-w-2xl mx-auto">
+              <h3 className="text-xl font-bold mb-2">
+                Pilot Price: <span className="text-skool-red">$1,997</span> 
+                <span className="text-muted-foreground line-through ml-2">$4,997</span>
+              </h3>
+              <p className="text-muted-foreground">
+                After these 3 pilot spots are filled, the price increases to $4,997 for all future customers.
+                <span className="font-semibold"> Lock in your founder pricing now.</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* NEW: Real-World Scenarios Section */}
+      <ScenarioShowcase />
+
+
+      {/* NEW: Pilot vs Future Pricing Comparison Table */}
+      <section className="px-4 py-20 bg-muted/5">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold mb-4">
+              Why Join the Pilot Program?
+            </h2>
+            <p className="text-xl text-muted-foreground">
+              See exactly what you save by being one of our 3 founding communities
+            </p>
+          </div>
+
+          <Card className="overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-border">
+                    <th className="text-left p-4 font-semibold"></th>
+                    <th className="text-center p-4">
+                      <div className="text-skool-red font-bold text-xl">PILOT PROGRAM</div>
+                      <div className="text-sm text-muted-foreground">(3 Spots Only)</div>
+                    </th>
+                    <th className="text-center p-4">
+                      <div className="text-muted-foreground font-bold text-xl">FUTURE PRICING</div>
+                      <div className="text-sm text-muted-foreground">(After Pilot)</div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-b border-border/50">
+                    <td className="p-4 font-medium">Initial Setup Fee</td>
+                    <td className="text-center p-4 text-skool-red font-bold text-lg">$1,997</td>
+                    <td className="text-center p-4 text-muted-foreground line-through">$4,997</td>
+                  </tr>
+                  <tr className="border-b border-border/50">
+                    <td className="p-4 font-medium">Custom AI Training</td>
+                    <td className="text-center p-4 text-skool-yellow font-semibold">Included</td>
+                    <td className="text-center p-4 text-muted-foreground">+$2,000</td>
+                  </tr>
+                  <tr className="border-b border-border/50">
+                    <td className="p-4 font-medium">Weekly Optimization Calls</td>
+                    <td className="text-center p-4 text-skool-yellow font-semibold">12 Weeks Included</td>
+                    <td className="text-center p-4 text-muted-foreground">$197/session</td>
+                  </tr>
+                  <tr className="border-b border-border/50">
+                    <td className="p-4 font-medium">Priority Feature Requests</td>
+                    <td className="text-center p-4"><CheckCircle className="w-5 h-5 text-skool-yellow mx-auto" /></td>
+                    <td className="text-center p-4 text-muted-foreground">Standard Queue</td>
+                  </tr>
+                  <tr className="border-b border-border/50">
+                    <td className="p-4 font-medium">Founder Status Benefits</td>
+                    <td className="text-center p-4"><Badge className="bg-skool-yellow/20 text-skool-yellow border-skool-yellow/30">Forever</Badge></td>
+                    <td className="text-center p-4 text-muted-foreground">Not Available</td>
+                  </tr>
+                  <tr className="border-b border-border/50">
+                    <td className="p-4 font-medium">Monthly Maintenance</td>
+                    <td className="text-center p-4 text-skool-red font-bold">$297/mo</td>
+                    <td className="text-center p-4 text-muted-foreground">$497/mo</td>
+                  </tr>
+                  <tr className="bg-skool-red/5">
+                    <td className="p-4 font-bold text-lg">Total First Year Value</td>
+                    <td className="text-center p-4">
+                      <div className="text-2xl font-bold text-skool-red">$5,561</div>
+                    </td>
+                    <td className="text-center p-4">
+                      <div className="text-2xl text-muted-foreground line-through">$12,961</div>
+                    </td>
+                  </tr>
+                  <tr className="bg-skool-yellow/10">
+                    <td className="p-4 font-bold text-lg">YOUR TOTAL SAVINGS</td>
+                    <td className="text-center p-4 colspan-2" colSpan={2}>
+                      <div className="text-3xl font-bold text-skool-yellow">$7,400 SAVED</div>
+                      <div className="text-sm text-muted-foreground mt-1">Plus lifetime founder pricing</div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </Card>
+
+          <div className="text-center mt-8">
+            <QuizButton className="bg-skool-red hover:bg-skool-red/90 text-white text-xl px-10 py-6">
+              See If You Qualify
+              <ArrowRight className="ml-3 h-6 w-6" />
+            </QuizButton>
+          </div>
+        </div>
+      </section>
+
+
+
+
+
+
+      {/* NEW: Hormozi Risk Reversal Section */}
+      <section className="px-4 py-20 bg-gradient-to-b from-muted/10 to-background">
+        <div className="max-w-4xl mx-auto">
+          <ScrollReveal direction="up">
+            <Card className="border-4 border-skool-yellow bg-skool-yellow/5">
+              <CardHeader className="text-center pb-8">
+                <Badge className="mb-4 bg-skool-yellow/20 text-skool-yellow border-skool-yellow/30">
+                  RISK-FREE GUARANTEE
+                </Badge>
+                <h2 className="text-4xl font-bold mb-4">
+                  Our "You'll Love It or We'll Fix It" Triple Guarantee
+                </h2>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {/* Guarantee 1 */}
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 bg-skool-yellow rounded-full flex items-center justify-center text-white font-bold text-xl shrink-0">
+                    1
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold mb-2">Week 1 Go-Live Guarantee</h3>
+                    <p className="text-muted-foreground">
+                      We'll have your AI assistant live and in testing with your community within the first week. 
+                      We'll then work together to refine and perfect it based on real member interactions.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Guarantee 2 */}
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 bg-skool-yellow rounded-full flex items-center justify-center text-white font-bold text-xl shrink-0">
+                    2
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold mb-2">30-Day Performance Guarantee</h3>
+                    <p className="text-muted-foreground">
+                      If after 30 days, your members aren't getting better, faster support than before, 
+                      we'll rebuild the entire system from scratch based on your feedback - at no additional cost.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Guarantee 3 */}
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 bg-skool-yellow rounded-full flex items-center justify-center text-white font-bold text-xl shrink-0">
+                    3
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold mb-2">ROI Guarantee</h3>
+                    <p className="text-muted-foreground">
+                      If Echo doesn't save you at least 10 hours per week OR improve your retention metrics within 90 days, 
+                      we'll work with you personally until it does - no matter how long it takes.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="bg-yellow-50 dark:bg-yellow-900/20 p-6 rounded-lg mt-8">
+                  <div className="text-center">
+                    <Trophy className="w-12 h-12 text-yellow-500 mx-auto mb-4" />
+                    <h4 className="text-lg font-bold mb-2">Plus: Pilot Partner Promise</h4>
+                    <p className="text-muted-foreground">
+                      As one of our 3 pilot partners, if you're not completely satisfied for any reason, 
+                      you can request a full refund within the first 30 days. No questions asked.
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+              <CardFooter>
+                <QuizButton className="w-full bg-skool-yellow hover:bg-skool-yellow-700 text-white text-lg py-6">
+                  <CheckCircle className="mr-2 h-5 w-5" />
+                  Yes! Check My Eligibility
+                </QuizButton>
+              </CardFooter>
+            </Card>
+          </ScrollReveal>
+        </div>
+      </section>
+
+      {/* 7. FAQ Section */}
+      <section className="px-4 py-20 max-w-4xl mx-auto">
+        <ScrollReveal direction="up">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold mb-4">Frequently Asked Questions</h2>
+            <p className="text-xl text-muted-foreground">Everything you need to know about the pilot program</p>
+          </div>
+        </ScrollReveal>
+
+        <Accordion type="single" collapsible className="space-y-4">
+          <AccordionItem value="item-1" className="border rounded-lg px-6">
+            <AccordionTrigger className="text-left">
+              <span className="flex items-center gap-2">
+                <HelpCircle className="w-5 h-5 text-blue-500" />
+                What is the pilot program?
+              </span>
+            </AccordionTrigger>
+            <AccordionContent className="text-muted-foreground pt-2">
+              A collaborative development initiative where 3 Skool communities work directly with us to build the perfect AI solution. You get massive savings, direct input on features, and help shape the product roadmap.
+            </AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem value="item-2" className="border rounded-lg px-6">
+            <AccordionTrigger className="text-left">
+              <span className="flex items-center gap-2">
+                <HelpCircle className="w-5 h-5 text-blue-500" />
+                How are the 3 communities selected?
+              </span>
+            </AccordionTrigger>
+            <AccordionContent className="text-muted-foreground pt-2">
+              We evaluate based on community size and engagement, alignment with our collaborative vision, willingness to participate actively, diverse use cases for learning, and technical readiness for partnership.
+            </AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem value="item-3" className="border rounded-lg px-6">
+            <AccordionTrigger className="text-left">
+              <span className="flex items-center gap-2">
+                <HelpCircle className="w-5 h-5 text-blue-500" />
+                What's the time commitment?
+              </span>
+            </AccordionTrigger>
+            <AccordionContent className="text-muted-foreground pt-2">
+              Approximately 1 hour per week for feedback sessions, plus testing new features in your community. We work around your schedule and make it as seamless as possible.
+            </AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem value="item-4" className="border rounded-lg px-6">
+            <AccordionTrigger className="text-left">
+              <span className="flex items-center gap-2">
+                <HelpCircle className="w-5 h-5 text-blue-500" />
+                How does the pricing work after pilot?
+              </span>
+            </AccordionTrigger>
+            <AccordionContent className="text-muted-foreground pt-2">
+              Pilot members keep founder pricing for life. Monthly costs will be determined collaboratively based on value delivered and community needs. You'll never pay more than you're comfortable with.
+            </AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem value="item-5" className="border rounded-lg px-6">
+            <AccordionTrigger className="text-left">
+              <span className="flex items-center gap-2">
+                <HelpCircle className="w-5 h-5 text-blue-500" />
+                Can I influence development decisions?
+              </span>
+            </AccordionTrigger>
+            <AccordionContent className="text-muted-foreground pt-2">
+              Absolutely! That's the whole point. Your feedback directly shapes features, AI personality, integration points, and pricing models. You're not just a customer - you're a development partner.
+            </AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem value="item-6" className="border rounded-lg px-6">
+            <AccordionTrigger className="text-left">
+              <span className="flex items-center gap-2">
+                <HelpCircle className="w-5 h-5 text-blue-500" />
+                What if I'm not selected for the pilot?
+              </span>
+            </AccordionTrigger>
+            <AccordionContent className="text-muted-foreground pt-2">
+              Join our priority waitlist for $2,997 setup (save $2,000) and first access when we open to more communities. You can also enter our engagement competition to win a pilot spot.
+            </AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem value="item-7" className="border rounded-lg px-6">
+            <AccordionTrigger className="text-left">
+              <span className="flex items-center gap-2">
+                <HelpCircle className="w-5 h-5 text-blue-500" />
+                When does the pilot start?
+              </span>
+            </AccordionTrigger>
+            <AccordionContent className="text-muted-foreground pt-2">
+              We're selecting communities over the next 2 weeks, then beginning implementation immediately. The pilot runs for 3 months with ongoing development based on feedback.
+            </AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem value="item-8" className="border rounded-lg px-6">
+            <AccordionTrigger className="text-left">
+              <span className="flex items-center gap-2">
+                <HelpCircle className="w-5 h-5 text-blue-500" />
+                Is this affiliated with Skool?
+              </span>
+            </AccordionTrigger>
+            <AccordionContent className="text-muted-foreground pt-2">
+              No, Echo is an independent third-party tool that works with Skool communities. We are not affiliated with or endorsed by Skool. We enhance your existing community experience.
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </section>
+
+      {/* 8. Three-Tier Final CTA */}
+      <section className="px-4 py-20 bg-gradient-to-b from-background to-muted/20">
+        <div className="max-w-6xl mx-auto">
+          <ScrollReveal direction="up">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl font-bold mb-4">Choose Your Path</h2>
+              <p className="text-xl text-muted-foreground">Three ways to get involved with Echo's AI revolution</p>
+            </div>
+          </ScrollReveal>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Pilot Program */}
+            <ScrollReveal direction="up" delay={0.1}>
+              <Card className="relative border-2 border-skool-red/30 shadow-lg h-full">
+                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                  <Badge className="bg-skool-red text-white px-4 py-1">MOST POPULAR</Badge>
+                </div>
+                <CardHeader className="text-center pt-8">
+                  <CardTitle className="text-2xl text-skool-red">Pilot Program</CardTitle>
+                  <div className="text-4xl font-bold mt-4">$1,997</div>
+                  <div className="text-sm text-muted-foreground">Save $3,000</div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <CheckCircle className="w-5 h-5 text-skool-yellow" />
+                    <span className="text-sm">Direct development input</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <CheckCircle className="w-5 h-5 text-skool-yellow" />
+                    <span className="text-sm">Priority features & support</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <CheckCircle className="w-5 h-5 text-skool-yellow" />
+                    <span className="text-sm">Lifetime founder benefits</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <CheckCircle className="w-5 h-5 text-skool-yellow" />
+                    <span className="text-sm">Shape the product roadmap</span>
+                  </div>
+                  <div className="text-center text-sm font-medium text-skool-red mt-4">
+                    Only 3 spots available
+                  </div>
+                </CardContent>
+                <CardFooter>
+                  <QuizButton className="w-full bg-skool-red hover:bg-skool-red/90 text-white">
+                    Apply for Pilot
+                  </QuizButton>
+                </CardFooter>
+              </Card>
+            </ScrollReveal>
+
+            {/* Priority Waitlist */}
+            <ScrollReveal direction="up" delay={0.2}>
+              <Card className="shadow-lg h-full">
+                <CardHeader className="text-center">
+                  <CardTitle className="text-2xl">Priority Waitlist</CardTitle>
+                  <div className="text-4xl font-bold mt-4">$2,997</div>
+                  <div className="text-sm text-muted-foreground">Save $2,000</div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <CheckCircle className="w-5 h-5 text-skool-yellow" />
+                    <span className="text-sm">First access after pilot</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <CheckCircle className="w-5 h-5 text-skool-yellow" />
+                    <span className="text-sm">Significant cost savings</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <CheckCircle className="w-5 h-5 text-skool-yellow" />
+                    <span className="text-sm">Early adopter benefits</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <CheckCircle className="w-5 h-5 text-skool-yellow" />
+                    <span className="text-sm">No application required</span>
+                  </div>
+                  <div className="text-center text-sm font-medium text-blue-600 mt-4">
+                    Available to all
+                  </div>
+                </CardContent>
+                <CardFooter>
+                  <QuizButton variant="outline" className="w-full">
+                    Join Waitlist
+                  </QuizButton>
+                </CardFooter>
+              </Card>
+            </ScrollReveal>
+
+            {/* Competition Entry */}
+            <ScrollReveal direction="up" delay={0.3}>
+              <Card className="shadow-lg h-full border-yellow-200 dark:border-yellow-800">
+                <CardHeader className="text-center">
+                  <CardTitle className="text-2xl text-yellow-600 dark:text-yellow-400">Win a Spot</CardTitle>
+                  <div className="text-4xl font-bold mt-4">$1,997</div>
+                  <div className="text-sm text-muted-foreground">If you win</div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <Trophy className="w-5 h-5 text-yellow-500" />
+                    <span className="text-sm">Full pilot benefits</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Trophy className="w-5 h-5 text-yellow-500" />
+                    <span className="text-sm">Community engagement contest</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Trophy className="w-5 h-5 text-yellow-500" />
+                    <span className="text-sm">Show your community strength</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Trophy className="w-5 h-5 text-yellow-500" />
+                    <span className="text-sm">No upfront commitment</span>
+                  </div>
+                  <div className="text-center text-sm font-medium text-yellow-600 mt-4">
+                    Engagement-based
+                  </div>
+                </CardContent>
+                <CardFooter>
+                  <QuizButton variant="outline" className="w-full border-yellow-500 text-yellow-600 hover:bg-yellow-50 dark:hover:bg-yellow-900/20">
+                    <Trophy className="mr-2 h-4 w-4" />
+                    Enter Contest
+                  </QuizButton>
+                </CardFooter>
+              </Card>
+            </ScrollReveal>
+          </div>
+
+          <div className="text-center mt-12">
+            <p className="text-muted-foreground">
+              Questions? <a href="mailto:hello@echoforskool.com" className="text-primary hover:underline">Contact us</a>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* 9. Footer */}
+      <footer className="bg-background border-t border-border px-4 py-12">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div className="col-span-1 md:col-span-2">
+              <div className="flex items-center mb-4">
+                <EchoSkoolLogo size="sm" />
+              </div>
+              <p className="text-muted-foreground mb-4">
+                AI-powered community enhancement for Skool platforms. Transform how your members learn and engage.
+              </p>
+              <p className="text-xs text-muted-foreground">
+                <AlertTriangle className="w-3 h-3 mr-1 inline" />
+                Not affiliated with or endorsed by Skool. Echo is an independent third-party enhancement tool.
+              </p>
+            </div>
+            
+            <div>
+              <h4 className="font-semibold mb-3">Program</h4>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li><a href="#pilot" className="hover:text-foreground">Pilot Program</a></li>
+                <li><a href="#waitlist" className="hover:text-foreground">Join Waitlist</a></li>
+                <li><a href="#competition" className="hover:text-foreground">Competition</a></li>
+                <li><a href="#faq" className="hover:text-foreground">FAQ</a></li>
+              </ul>
+            </div>
+            
+            <div>
+              <h4 className="font-semibold mb-3">Legal</h4>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li><a href="#" className="hover:text-foreground">Terms of Service</a></li>
+                <li><a href="#" className="hover:text-foreground">Privacy Policy</a></li>
+                <li><a href="#" className="hover:text-foreground">Disclaimer</a></li>
+                <li><a href="mailto:hello@echoforskool.com" className="hover:text-foreground">Contact</a></li>
+              </ul>
+            </div>
+          </div>
+          
+          <div className="border-t border-border mt-8 pt-8 text-center">
+            <p className="text-sm text-muted-foreground">
+              © 2025 Echo for Skool. Results vary by community and implementation. Individual results not guaranteed.
+            </p>
+          </div>
+        </div>
+      </footer>
+    </main>
+  )
+}

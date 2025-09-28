@@ -9,8 +9,8 @@ import { EchoSkoolLogo } from "@/components/echo-skool-logo"
 export default function ScheduledSuccessPage() {
   useEffect(() => {
     // Track conversion
-    if (typeof window !== 'undefined' && window.gtag) {
-      window.gtag('event', 'conversion', {
+    if (typeof window !== 'undefined' && (window as any).gtag) {
+      (window as any).gtag('event', 'conversion', {
         'send_to': 'AW-XXXXX/XXXXX', // Add your conversion ID
         'event_category': 'pilot_scheduled',
       })
@@ -19,11 +19,13 @@ export default function ScheduledSuccessPage() {
 
   const handleClose = () => {
     // If in popup, close it
-    if (window.opener) {
-      window.close()
-    } else {
-      // Otherwise redirect to home
-      window.location.href = '/'
+    if (typeof window !== 'undefined') {
+      if (window.opener) {
+        window.close()
+      } else {
+        // Otherwise redirect to home
+        window.location.href = '/'
+      }
     }
   }
 
@@ -134,7 +136,7 @@ export default function ScheduledSuccessPage() {
               className="w-full bg-blue-600 hover:bg-blue-700 text-white py-6"
               size="lg"
             >
-              {window.opener ? (
+              {typeof window !== 'undefined' && window.opener ? (
                 <>
                   <X className="mr-2 h-5 w-5" />
                   Close Window

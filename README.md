@@ -1,24 +1,23 @@
 # Echo Skool Waitlist - Skool Community CRM System
 
-A Next.js application for managing Skool community CRM and waitlist functionality.
+A Next.js application for managing Skool community leads with AI-powered support capabilities.
 
 ## Features
 
-- **Modern Landing Page**: Built with Next.js 15+ and Tailwind CSS
-- **Skool Integration**: Extract leads from Skool communities  
-- **AI-Powered Support**: Echo AI mentor for community management
-- **Web Scraping**: Automated data extraction from Skool platforms
-- **Responsive Design**: Mobile-first responsive interface
-- **Dark Mode**: Built-in dark theme support
+- **Modern Landing Page**: Next.js 15+ with Tailwind CSS and dark mode
+- **AI Chat Support**: Demo chat API for community support interactions
+- **Lead Capture**: Pilot program form submission system
+- **Web Scraping**: Playwright-based Skool community extraction
+- **Responsive Design**: Mobile-first interface with shadcn/ui components
 
 ## Tech Stack
 
 - **Framework**: Next.js 15.5.3
 - **Styling**: Tailwind CSS 3.4+ with custom design system
 - **UI Components**: Radix UI + shadcn/ui
-- **Scraping**: Puppeteer 24.22.3
+- **Scraping**: Playwright for automated data extraction
 - **Language**: TypeScript 5.9+
-- **Animation**: Motion 12.23+ for smooth interactions
+- **Animation**: Smooth interactions and transitions
 
 ## Quick Start
 
@@ -36,32 +35,14 @@ npm run build
 npm start
 ```
 
-## Available Scripts
-
-```bash
-# Development
-npm run dev              # Start development server
-npm run build           # Build for production
-npm run start           # Start production server
-npm run lint            # Run ESLint
-
-# Web Scraping
-npm run scrape          # Extract all English communities
-npm run scrape:tech     # Extract tech communities
-npm run scrape:health   # Extract health communities  
-npm run scrape:money    # Extract money/business communities
-
-# Setup
-npm run install-playwright  # Install Playwright browsers
-npm run deploy              # Build and deploy to Vercel
-```
-
 ## Project Structure
 
 ```
 echo-skool-waitlist/
 ├── app/                    # Next.js app directory
 │   ├── api/               # API routes
+│   │   ├── chat/         # AI chat endpoint
+│   │   └── submit-pilot-form/  # Form submission
 │   ├── globals.css        # Global styles
 │   ├── layout.tsx         # Root layout
 │   └── page.tsx           # Landing page
@@ -71,46 +52,102 @@ echo-skool-waitlist/
 │   └── theme-provider.tsx
 ├── lib/                   # Utility functions
 │   └── utils.ts          # Shared utilities
-└── skool-extraction-production/  # Scraping scripts
+└── skool-extraction-production/  # Scraping system
+    ├── extractors/       # Extraction scripts
+    ├── config/           # Configuration
+    └── data/            # Output data
+```
+
+## API Endpoints
+
+### POST `/api/chat`
+AI-powered chat endpoint for community support
+- Request: `{ message: string, agentType?: string }`
+- Response: `{ message: string, agentType: string, timestamp: string }`
+
+### POST `/api/submit-pilot-form`
+Pilot program application submission
+- Request: Form data with community details
+- Response: `{ success: boolean, message: string }`
+
+## Web Scraping
+
+The `skool-extraction-production` directory contains scripts for extracting Skool community data:
+
+```bash
+cd skool-extraction-production
+
+# Install Playwright
+npm install
+
+# Extract tech communities (example)
+node extract-tech-production.js --limit 5
+
+# Extract from file
+node extractors/full-profile-extractor.js --file data/urls.txt
+
+# Extract single community
+node extractors/full-profile-extractor.js --communities "https://www.skool.com/example"
 ```
 
 ## Configuration
 
-The app uses the following configuration files:
+### Environment Variables
+Create a `.env.local` file for:
+```
+# Optional - for production AI integration
+ANTHROPIC_API_KEY=your_key_here
 
-- `next.config.js` - Next.js configuration
-- `tailwind.config.js` - Tailwind CSS with custom Skool brand colors
-- `tsconfig.json` - TypeScript configuration  
-- `components.json` - shadcn/ui configuration
+# Optional - for webhook integration
+N8N_WEBHOOK_URL=your_webhook_url
+```
 
-## Skool Brand Integration
-
-The design incorporates authentic Skool brand colors:
-
-- **Dark Blue**: `#3B5998` (from 's')
-- **Coral Red**: `#E85449` (from 'k') 
-- **Gold Yellow**: `#F5B800` (from first 'o')
-- **Light Cyan**: `#4FC3F7` (from second 'o')
-- **Salmon**: `#FF8A80` (from 'l')
+### Tailwind Configuration
+Custom Skool brand colors are integrated:
+- **Dark Blue**: `#3B5998`
+- **Coral Red**: `#E85449`
+- **Gold Yellow**: `#F5B800`
+- **Light Cyan**: `#4FC3F7`
+- **Salmon**: `#FF8A80`
 
 ## Development
 
-This project follows modern Next.js 15+ patterns:
+```bash
+# Run linter
+npm run lint
 
-- **App Router**: Uses the new app directory structure
-- **Server Components**: Optimized for performance
-- **TypeScript**: Fully typed for better DX
-- **Responsive Design**: Mobile-first approach
+# Type checking (if configured)
+npm run typecheck
+
+# Run in development with hot reload
+npm run dev
+```
 
 ## Deployment
 
-Deploy easily to Vercel:
-
+Deploy to Vercel:
 ```bash
-npm run deploy
+npm run build
+vercel --prod
 ```
 
-Or deploy to any platform that supports Next.js applications.
+Or deploy to any platform supporting Next.js.
+
+## Current Status
+
+This is a functional prototype with:
+- ✅ Working landing page with countdown timer
+- ✅ Demo API endpoints for chat and form submission
+- ✅ Basic web scraping capability
+- ✅ Responsive design with dark mode
+
+## Future Enhancements
+
+- [ ] Connect to real AI service (Anthropic/OpenAI)
+- [ ] Database integration for lead storage
+- [ ] Enhanced scraping with profile extraction
+- [ ] Email automation integration
+- [ ] Analytics and tracking
 
 ## License
 
@@ -118,8 +155,4 @@ MIT License - see LICENSE file for details.
 
 ---
 
-## Echo AI Platform
-
-This is part of the larger Echo AI Platform - adaptive intelligence for businesses.
-
-**Transform your Skool community with AI-powered support that works 24/7.**
+Part of the Echo AI Platform - adaptive intelligence for businesses.

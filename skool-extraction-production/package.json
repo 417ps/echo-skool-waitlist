@@ -1,0 +1,35 @@
+{
+  "name": "skool-extraction-production",
+  "version": "1.0.0",
+  "description": "Production-ready Skool community and profile extraction system",
+  "main": "extractors/full-profile-extractor.js",
+  "scripts": {
+    "test": "node tests/run-all-tests.js",
+    "test:unit": "node tests/unit/test-profile-extraction.js",
+    "test:integration": "node tests/integration/test-extraction-flow.js",
+    "extract": "node extractors/full-profile-extractor.js",
+    "extract:test": "node extractors/full-profile-extractor.js --communities \"https://www.skool.com/skoolers\" --limit 1",
+    "extract:test:5": "node extractors/full-profile-extractor.js --file \"data/all-english-urls-list.txt\" --limit 5",
+    "extract:all-english": "node extractors/full-profile-extractor.js --file \"data/all-english-urls-list.txt\"",
+    "prepare:all-english": "node prepare-all-english-extraction.js",
+    "tdd": "node tests/test-runner.js tdd",
+    "tdd:test": "node tests/test-runner.js tdd https://www.skool.com/skoolers",
+    "validate": "node tests/extraction-validator.js latest",
+    "validate:file": "node tests/extraction-validator.js file",
+    "test:compare": "node tests/test-runner.js compare",
+    "monitor": "node monitors/extraction-monitor.js",
+    "status": "node monitors/status-reporter.js --quick",
+    "report": "node monitors/status-reporter.js --txt",
+    "report:json": "node monitors/status-reporter.js --json",
+    "docs": "echo 'See docs/README.md for documentation'"
+  },
+  "keywords": ["skool", "extraction", "automation", "profile", "community", "scraping"],
+  "author": "Echo AI Platform",
+  "license": "MIT",
+  "dependencies": {
+    "playwright": "^1.55.1"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
